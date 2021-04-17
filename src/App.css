@@ -1,4 +1,4 @@
-.App {
+/*.App {
   text-align: center;
 }
 
@@ -35,4 +35,41 @@
   to {
     transform: rotate(360deg);
   }
+}
+*/
+
+body {
+  margin: 0;
+  text-align: center;
+  background: white;
+}
+
+#canvas {
+  margin-top: 10px;
+  background: white;
+  box-shadow: 1px 1px 5px;
+}
+
+.buttons {
+  margin: 20px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:focus {
+  outline: none;
+}
+
+#start,
+#clear {
+  height: 30px;
+  width: 150px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+  background: #b94e4e;
 }
