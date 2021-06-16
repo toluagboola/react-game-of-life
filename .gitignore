@@ -2,6 +2,8 @@
 /.pnp
 .pnp.js
 .eslintrc.json
+yarn.lock
+react-app-env.d.ts
 	
 /coverage
 
