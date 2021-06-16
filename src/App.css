@@ -1,19 +1,19 @@
 body {
-  background: #e2e2e2;
-  /*background: linear-gradient(to top, #3e8ed0 -130%, #fff 100%);*/
+	background: #e2e2e2;
+	font-family: "Roboto Mono", monospace;
 }
 
 .button {
-  color: #fff !important;
-  border: none;
-  background: #62a87c;
+	color: #fff !important;
+	border: none;
+	background: #62a87c;
 }
 
 .button:hover {
-  color: #fff;
-  border: none;
+	color: #fff;
+	border: none;
 }
 
 .button:focus {
-  outline: none;
+	outline: none;
 }
