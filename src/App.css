@@ -1,6 +1,15 @@
+html {
+	background: #e2e5ff;
+}
+
 body {
-	background: #e2e2e2;
 	font-family: "Roboto Mono", monospace;
+}
+
+.title,
+.subtitle {
+	margin: 0 auto;
+	max-width: 700px;
 }
 
 .button {

@@ -1,5 +1,5 @@
 {
-  "name": "new-gol",
+  "name": "Game of Life",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

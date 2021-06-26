@@ -1,8 +1,8 @@
 import "bulma/css/bulma.min.css";
 import React, { useState, useRef, useCallback } from "react";
-import produce from "immer";
 import { Pause, Play, XCircle } from "react-feather";
 import "./App.css";
+import useInterval from "./useInterval";
 
 const numRows = 25;
 const numCols = 35;
@@ -18,7 +18,7 @@ const operations = [
   [-1, 0],
 ];
 
-const generateEmptyGrid = () => {
+const generateEmptyGrid = (): number[][] => {
   const rows = [];
   for (let i = 0; i < numRows; i++) {
     rows.push(Array.from(Array(numCols), () => 0));
@@ -26,62 +26,59 @@ const generateEmptyGrid = () => {
   return rows;
 };
 
+const randomTiles = (): number[][] => {
+  const rows = [];
+  for (let i = 0; i < numRows; i++) {
+    rows.push(Array.from(Array(numCols), () => (Math.random() > 0.7 ? 1 : 0)));
+  }
+  return rows;
+};
+
 const App: React.FC = () => {
   const [grid, setGrid] = useState(() => {
-    return generateEmptyGrid();
+    return randomTiles();
   });
-
-  const generateRandomTiles = () => {
-    const rows = [];
-    for (let i = 0; i < numRows; i++) {
-      rows.push(
-        Array.from(Array(numCols), () => (Math.random() > 0.7 ? 1 : 0))
-      );
-    }
-    setGrid(rows);
-  };
-
-  // generateRandomTiles();
 
   const [running, setRunning] = useState(false);
   const runningRef = useRef(running);
   runningRef.current = running;
 
-  const runSimulation = useCallback(() => {
+  const runSimulation = useCallback((grid) => {
     if (!runningRef.current) {
       return;
     }
 
-    setGrid((g) => {
-      return produce(g, (gridCopy) => {
-        for (let i = 0; i < numRows; i++) {
-          for (let k = 0; k < numCols; k++) {
-            let neighbors = 0;
+    let gridCopy = JSON.parse(JSON.stringify(grid));
+    for (let i = 0; i < numRows; i++) {
+      for (let j = 0; j < numCols; j++) {
+        let neighbors = 0;
 
-            // Find out how many neighbors a cell has
-            operations.forEach(([x, y]) => {
-              const newI = i + x;
-              const newK = k + y;
-              if (newI >= 0 && newI < numRows && newK >= 0 && newK < numCols) {
-                neighbors += g[newI][newK];
-              }
-            });
+        operations.forEach(([x, y]) => {
+          const newI = i + x;
+          const newJ = j + y;
 
-            if (neighbors < 2 || neighbors > 3) {
-              gridCopy[i][k] = 0;
-            } else if (g[i][k] === 0 && neighbors === 3) {
-              gridCopy[i][k] = 1;
-            }
+          if (newI >= 0 && newI < numRows && newJ >= 0 && newJ < numCols) {
+            neighbors += grid[newI][newJ];
           }
-        }
-      });
-    });
+        });
 
-    setTimeout(runSimulation, 50);
+        if (neighbors < 2 || neighbors > 3) {
+          gridCopy[i][j] = 0;
+        } else if (grid[i][j] === 0 && neighbors === 3) {
+          gridCopy[i][j] = 1;
+        }
+      }
+    }
+
+    setGrid(gridCopy);
   }, []);
 
+  useInterval(() => {
+    runSimulation(grid);
+  }, 250);
+
   return (
-    <div className="container has-text-centered py-3">
+    <div className="container has-text-centered py-5">
       <h1 className="title is-uppercase">Game of Life</h1>
       <div
         style={{
@@ -96,9 +93,9 @@ const App: React.FC = () => {
             <div
               key={`${i}-${k}`}
               onClick={() => {
-                const newGrid = produce(grid, (gridCopy) => {
-                  gridCopy[i][k] = grid[i][k] ? 0 : 1;
-                });
+                // Deep clone grid
+                let newGrid = JSON.parse(JSON.stringify(grid));
+                newGrid[i][k] = grid[i][k] ? 0 : 1;
                 setGrid(newGrid);
               }}
               style={{
@@ -119,7 +116,8 @@ const App: React.FC = () => {
             setRunning(!running);
             if (!running) {
               runningRef.current = true;
-              runSimulation();
+
+              // setTimeout(runSimulation, 50);
             }
           }}
         >
@@ -130,13 +128,7 @@ const App: React.FC = () => {
         <button
           className="button "
           onClick={() => {
-            const rows = [];
-            for (let i = 0; i < numRows; i++) {
-              rows.push(
-                Array.from(Array(numCols), () => (Math.random() > 0.7 ? 1 : 0))
-              );
-            }
-            setGrid(rows);
+            setGrid(randomTiles());
           }}
         >
           Random
@@ -159,3 +151,28 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+// setGrid((g) => {
+//   return produce(g, (gridCopy) => {
+//     for (let i = 0; i < numRows; i++) {
+//       for (let k = 0; k < numCols; k++) {
+//         let neighbors = 0;
+
+//         // Find out how many neighbors a cell has
+//         operations.forEach(([x, y]) => {
+//           const newI = i + x;
+//           const newK = k + y;
+//           if (newI >= 0 && newI < numRows && newK >= 0 && newK < numCols) {
+//             neighbors += g[newI][newK];
+//           }
+//         });
+
+//         if (neighbors < 2 || neighbors > 3) {
+//           gridCopy[i][k] = 0;
+//         } else if (g[i][k] === 0 && neighbors === 3) {
+//           gridCopy[i][k] = 1;
+//         }
+//       }
+//     }
+//   });
+// });
