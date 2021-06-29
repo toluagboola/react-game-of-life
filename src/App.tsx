@@ -7,15 +7,16 @@ import useInterval from "./useInterval";
 const numRows = 25;
 const numCols = 35;
 
+// Directions: N, S, E, W, NE, NW, SE, SW
 const operations = [
-  [0, 1],
-  [0, -1],
-  [1, -1],
-  [-1, 1],
-  [1, 1],
-  [-1, -1],
-  [1, 0],
-  [-1, 0],
+  [0, 1], // right
+  [0, -1], // left
+  [1, -1], // top left
+  [-1, 1], // top right
+  [1, 1], // top
+  [-1, -1], // bottom
+  [1, 0], // bottom right
+  [-1, 0], // bottom left
 ];
 
 const generateEmptyGrid = (): number[][] => {
@@ -36,6 +37,7 @@ const randomTiles = (): number[][] => {
 
 const App: React.FC = () => {
   const [grid, setGrid] = useState(() => {
+    console.log(randomTiles());
     return randomTiles();
   });
 
@@ -75,7 +77,7 @@ const App: React.FC = () => {
 
   useInterval(() => {
     runSimulation(grid);
-  }, 250);
+  }, 150);
 
   return (
     <div className="container has-text-centered py-5">
@@ -116,8 +118,6 @@ const App: React.FC = () => {
             setRunning(!running);
             if (!running) {
               runningRef.current = true;
-
-              // setTimeout(runSimulation, 50);
             }
           }}
         >
@@ -151,28 +151,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-// setGrid((g) => {
-//   return produce(g, (gridCopy) => {
-//     for (let i = 0; i < numRows; i++) {
-//       for (let k = 0; k < numCols; k++) {
-//         let neighbors = 0;
-
-//         // Find out how many neighbors a cell has
-//         operations.forEach(([x, y]) => {
-//           const newI = i + x;
-//           const newK = k + y;
-//           if (newI >= 0 && newI < numRows && newK >= 0 && newK < numCols) {
-//             neighbors += g[newI][newK];
-//           }
-//         });
-
-//         if (neighbors < 2 || neighbors > 3) {
-//           gridCopy[i][k] = 0;
-//         } else if (g[i][k] === 0 && neighbors === 3) {
-//           gridCopy[i][k] = 1;
-//         }
-//       }
-//     }
-//   });
-// });
