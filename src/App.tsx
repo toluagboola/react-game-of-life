@@ -1,6 +1,6 @@
 import "bulma/css/bulma.min.css";
-import React, { useState, useRef, useCallback } from "react";
-import { Pause, Play, XCircle } from "react-feather";
+import { FC, useState, useRef, useCallback } from "react";
+import { Pause, Play, XCircle, Globe } from "react-feather";
 import "./App.css";
 import useInterval from "./useInterval";
 
@@ -35,9 +35,8 @@ const randomTiles = (): number[][] => {
   return rows;
 };
 
-const App: React.FC = () => {
+const App: FC = () => {
   const [grid, setGrid] = useState(() => {
-    console.log(randomTiles());
     return randomTiles();
   });
 
@@ -113,7 +112,7 @@ const App: React.FC = () => {
 
       <div className="buttons is-centered pt-5">
         <button
-          className="button start-game"
+          className="button start-game mx-2"
           onClick={() => {
             setRunning(!running);
             if (!running) {
@@ -126,16 +125,19 @@ const App: React.FC = () => {
         </button>
 
         <button
-          className="button "
+          className="button mx-2"
           onClick={() => {
             setGrid(randomTiles());
           }}
         >
-          Random
+          <span className="icon">
+            <Globe />
+          </span>
+          <span>Random</span>
         </button>
 
         <button
-          className="button"
+          className="button mx-2"
           onClick={() => {
             setGrid(generateEmptyGrid());
           }}
@@ -143,7 +145,7 @@ const App: React.FC = () => {
           <span className="icon">
             <XCircle />
           </span>
-          <span>Clear board</span>
+          <span>Clear</span>
         </button>
       </div>
     </div>
